@@ -1,9 +1,77 @@
 #include <windows.h>
+#include <stdlib.h>
 
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+
+/*char szClassName[] = "TextEntry";
+char text1[20], text2[20];*/
+HWND textbox,textbox2;
+HWND textfield , button1;
 /* This is where all the input to the window goes to */
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
 	switch(Message) {
+
+		case WM_CREATE:{
+
+			textfield = CreateWindow("STATIC", "Please input two numbers",
+									 WS_VISIBLE | WS_CHILD,
+									 20, 20 , 200, 25,
+									 hwnd, NULL , NULL , NULL);
+
+			textbox = CreateWindow("EDIT",
+									"",
+									 WS_BORDER | WS_CHILD | WS_VISIBLE,
+									 40,60,50,25,
+									 hwnd, NULL, NULL, NULL);
+			textbox2 = CreateWindow("EDIT",
+									"",
+									 WS_BORDER | WS_CHILD | WS_VISIBLE,
+									 100,60,50,25,
+									 hwnd, NULL, NULL, NULL);
+			
+			button1 = CreateWindow("BUTTON",
+									 "+",
+									 WS_VISIBLE | WS_CHILD | WS_BORDER,
+									 50,100,20,20,
+									 hwnd, (HMENU) 2, NULL, NULL);
 		
+			
+
+		break;
+		}
+
+		case WM_COMMAND:{
+
+			switch (LOWORD(wParam))
+			{
+				case 1: 
+				::MessageBeep(MB_ICONERROR);
+				::MessageBox(hwnd," ", "Result", MB_OK);
+				break;
+
+				case 2:
+				char a[20],b[20];
+				int c[20];
+				GetWindowText(textbox,a,20);
+				GetWindowText(textbox2,b,20);
+				c = atoi(a)+atoi(b);
+				/*int num1 = 0;
+				int num2 = 0;
+				int sum;
+				char text3[20];
+				char *t1 = &text1[0];
+				char *t2 = &text2[0];
+				num1 = GetWindowText(textbox, &text1[0], 20);
+				num2 = GetWindowText(textbox2, &text2[0],20);
+				text3 = atoi(text1)+atoi(text2);*/
+
+				::MessageBox(hwnd, a, "Result", MB_OK);
+			}
+
+			break;	
+		}
+
+			
 		/* Upon destruction, tell the main thread to stop */
 		case WM_DESTROY: {
 			PostQuitMessage(0);
@@ -31,7 +99,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wc.hCursor	 = LoadCursor(NULL, IDC_ARROW);
 	
 	/* White, COLOR_WINDOW is just a #define for a system color, try Ctrl+Clicking it */
-	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+	wc.hbrBackground = (HBRUSH)(COLOR_BACKGROUND);
 	wc.lpszClassName = "WindowClass";
 	wc.hIcon	 = LoadIcon(NULL, IDI_APPLICATION); /* Load a standard icon */
 	wc.hIconSm	 = LoadIcon(NULL, IDI_APPLICATION); /* use the name "A" to use the project icon */
@@ -41,11 +109,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		return 0;
 	}
 
-	hwnd = CreateWindowEx(WS_EX_CLIENTEDGE,"WindowClass","Caption",WS_VISIBLE|WS_OVERLAPPEDWINDOW,
+	hwnd = CreateWindowEx(WS_EX_CLIENTEDGE,"WindowClass","My Calculator",WS_VISIBLE|WS_SYSMENU,
 		CW_USEDEFAULT, /* x */
 		CW_USEDEFAULT, /* y */
-		640, /* width */
-		480, /* height */
+		250, /* width */
+		200, /* height */
 		NULL,NULL,hInstance,NULL);
 
 	if(hwnd == NULL) {
