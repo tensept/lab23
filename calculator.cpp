@@ -1,12 +1,14 @@
 #include <windows.h>
 #include <stdlib.h>
+#include <math.h>
+#include <stdio.h>
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
-/*char szClassName[] = "TextEntry";
-char text1[20], text2[20];*/
+char szClassName[] = "TextEntry";
+char text1[20], text2[20];
 HWND textbox,textbox2;
-HWND textfield , button1;
+HWND textfield , button1, button2, button3, button4;
 /* This is where all the input to the window goes to */
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
 	switch(Message) {
@@ -20,20 +22,36 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 
 			textbox = CreateWindow("EDIT",
 									"",
-									 WS_BORDER | WS_CHILD | WS_VISIBLE,
-									 40,60,50,25,
+									 WS_CHILD | WS_VISIBLE,
+									 40,55,150,25,
 									 hwnd, NULL, NULL, NULL);
 			textbox2 = CreateWindow("EDIT",
 									"",
-									 WS_BORDER | WS_CHILD | WS_VISIBLE,
-									 100,60,50,25,
+									 WS_CHILD | WS_VISIBLE,
+									 40,85,150,25,
 									 hwnd, NULL, NULL, NULL);
 			
 			button1 = CreateWindow("BUTTON",
 									 "+",
 									 WS_VISIBLE | WS_CHILD | WS_BORDER,
-									 50,100,20,20,
+									 60,120,20,20,
+									 hwnd, (HMENU) 1, NULL, NULL);
+			button2 = CreateWindow("BUTTON",
+									 "-",
+									 WS_VISIBLE | WS_CHILD | WS_BORDER,
+									 90,120,20,20,
 									 hwnd, (HMENU) 2, NULL, NULL);
+			button3 = CreateWindow("BUTTON",
+									 "*",
+									 WS_VISIBLE | WS_CHILD | WS_BORDER,
+									 120,120,20,20,
+									 hwnd, (HMENU) 3, NULL, NULL);
+			button4 = CreateWindow("BUTTON",
+									 "/",
+									 WS_VISIBLE | WS_CHILD | WS_BORDER,
+									 150,120,20,20,
+									 hwnd, (HMENU) 4, NULL, NULL);
+									 
 		
 			
 
@@ -41,31 +59,54 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
 		}
 
 		case WM_COMMAND:{
+			if(LOWORD(wParam)!=0){
+				int num1 = 0;
+				int num2 = 0;
+				int sum;
+				float rs;
+				//char *t1 = &text1[0];
+				//char *t2 = &text2[0];
+				num1 = GetWindowText(textbox, &text1[0], 20);
+				num2 = GetWindowText(textbox2, &text2[0],20);
+			}
 
 			switch (LOWORD(wParam))
 			{
+				{
 				case 1: 
-				::MessageBeep(MB_ICONERROR);
-				::MessageBox(hwnd," ", "Result", MB_OK);
+				float rs = atof(text1)+atof(text2);
+				char t[100];
+				sprintf(t,"%f",rs);
+				::MessageBox(hwnd, t, "Result", MB_OK);
 				break;
-
+				}
+				{
+					
 				case 2:
-				char a[20],b[20];
-				int c[20];
-				GetWindowText(textbox,a,20);
-				GetWindowText(textbox2,b,20);
-				c = atoi(a)+atoi(b);
-				/*int num1 = 0;
-				int num2 = 0;
-				int sum;
-				char text3[20];
-				char *t1 = &text1[0];
-				char *t2 = &text2[0];
-				num1 = GetWindowText(textbox, &text1[0], 20);
-				num2 = GetWindowText(textbox2, &text2[0],20);
-				text3 = atoi(text1)+atoi(text2);*/
-
-				::MessageBox(hwnd, a, "Result", MB_OK);
+				float rs = atof(text1)-atof(text2);
+				char t[100];
+				sprintf(t,"%f",rs);
+				::MessageBox(hwnd, t, "Result", MB_OK);
+				break;
+				}
+				
+				{
+				case 3:
+				float rs = atof(text1)*atof(text2);
+				char t[100];
+				sprintf(t,"%f",rs);
+				::MessageBox(hwnd, t, "Result", MB_OK);
+				break;
+				}
+				
+				{
+				case 4:
+				float rs = atof(text1)/atof(text2);
+				char t[100];
+				sprintf(t,"%f",rs);
+				::MessageBox(hwnd, t, "Result", MB_OK);
+				break;
+				}
 			}
 
 			break;	
@@ -99,7 +140,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	wc.hCursor	 = LoadCursor(NULL, IDC_ARROW);
 	
 	/* White, COLOR_WINDOW is just a #define for a system color, try Ctrl+Clicking it */
-	wc.hbrBackground = (HBRUSH)(COLOR_BACKGROUND);
+	wc.hbrBackground = (HBRUSH)(COLOR_BACKGROUND+26);
 	wc.lpszClassName = "WindowClass";
 	wc.hIcon	 = LoadIcon(NULL, IDI_APPLICATION); /* Load a standard icon */
 	wc.hIconSm	 = LoadIcon(NULL, IDI_APPLICATION); /* use the name "A" to use the project icon */
